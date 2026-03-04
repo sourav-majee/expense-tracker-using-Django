@@ -11,6 +11,8 @@ from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
 
 from .models import Category, Expense
 from .serializers import (
@@ -64,10 +66,9 @@ def me_view(request):
 # ── Categories ────────────────────────────────────────────────────────────────
 
 class CategoryListView(generics.ListAPIView):
-    """GET /api/categories/"""
-    queryset             = Category.objects.all()
-    serializer_class     = CategorySerializer
-    permission_classes   = [IsAuthenticated]
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny] 
 
 
 # ── Expenses ──────────────────────────────────────────────────────────────────
