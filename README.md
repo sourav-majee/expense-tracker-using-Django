@@ -1,164 +1,141 @@
-# 💰 Ledger — Django Expense Tracker
+# 💰 Ledger — Expense Tracker
 
-> Django 5 · Django REST Framework · PostgreSQL · Vanilla HTML/CSS/JS
-
----
-
-## 📁 Project Structure
-
-```
-expense-tracker-django/
-│
-├── manage.py                        ← Django CLI entry point
-│
-├── expense_tracker/                 ← Django PROJECT (config)
-│   ├── __init__.py
-│   ├── settings.py                  ← All settings (DB, apps, CORS...)
-│   ├── urls.py                      ← Root URL dispatcher
-│   └── wsgi.py
-│
-├── expenses/                        ← Django APP (all logic)
-│   ├── models.py                    ← ORM: Category, Expense
-│   ├── serializers.py               ← DRF serializers (JSON ↔ Model)
-│   ├── views.py                     ← API views + stats logic
-│   ├── urls.py                      ← App-level URL patterns
-│   ├── admin.py                     ← Django admin config
-│   └── migrations/
-│       ├── 0001_initial.py          ← Creates tables
-│       └── 0002_seed_categories.py  ← Seeds 7 default categories
-│
-├── frontend/
-│   └── index.html                   ← Full SPA (no build step)
-│
-├── requirements.txt
-└── .env.example
-```
+Ledger is a personal expense tracking web application built with **Django** and **vanilla JavaScript**.
+It allows users to manage daily expenses, visualize spending patterns, and export data easily.
 
 ---
 
-## ⚙️ Setup & Run
+## 🌟 Features
 
-### 1. Create the PostgreSQL database
+* 🔐 **User Authentication** — Register, login, and logout functionality
+* 🎭 **Guest Mode** — Use the application without creating an account (data stored temporarily in the browser)
+* 📊 **Dashboard Analytics** — View monthly totals, top spending category, and a 30-day spending chart
+* 💳 **Expense Management** — Add, edit, and delete expenses
+* 🗂️ **Default Categories** — Food, Transport, Shopping, Health, Bills, Entertainment, Other
+* 🔍 **Search & Filter** — Filter expenses by keyword, category, or month
+* ⬇️ **CSV Export** — Download expense data as a spreadsheet
+* 🌙 **Dark / Light Theme** — Toggle theme with saved preference
+* 👤 **User-specific Data** — Each user can access only their own expenses
+* 🛡️ **Django Admin Panel** — Manage users, expenses, and categories via `/admin/`
 
-```sql
--- In psql or pgAdmin
-CREATE DATABASE expense_tracker;
+---
+
+## 🛠 Tech Stack
+
+**Backend**
+
+* Django
+* Django REST Framework
+
+**Frontend**
+
+* HTML
+* CSS
+* Vanilla JavaScript
+
+**Database**
+
+* PostgreSQL (local or production)
+
+**Deployment**
+
+* Render
+
+---
+
+## ⚙️ Local Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/sourav-majee/expense-tracker-using-Django.git
+cd expense-tracker-using-Django
 ```
 
-### 2. Install dependencies
+### 2. Create a virtual environment
 
 ```bash
 python -m venv venv
-source venv/bin/activate       # Windows: venv\Scripts\activate
+```
+
+Activate the environment:
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Mac / Linux
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment
+---
 
-```bash
-cp .env.example .env
-# Edit .env — set your DB_PASSWORD (and SECRET_KEY for production)
+### 4. Create PostgreSQL database
+
+```sql
+CREATE DATABASE expense_tracker;
 ```
 
-### 4. Run migrations (creates tables + seeds categories)
+---
+
+### 5. Create a `.env` file in the project root
+
+```env
+SECRET_KEY=django-insecure-change-me
+DEBUG=True
+DB_NAME=expense_tracker
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+---
+
+### 6. Apply database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Create a superuser (for the Admin panel)
+---
+
+### 7. Create an admin user
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Start the server
+---
+
+### 8. Run the development server
 
 ```bash
-python manage.py runserver
+python manage.py runserver 8001
 ```
 
-| URL                          | What it does                    |
-|------------------------------|---------------------------------|
-| http://localhost:8000/       | Frontend SPA                    |
-| http://localhost:8000/admin/ | Django Admin (free dashboard)   |
-| http://localhost:8000/api/   | REST API                        |
+Open your browser and visit:
 
----
-
-## 🔌 REST API Reference
-
-| Method | Endpoint               | Description                        |
-|--------|------------------------|------------------------------------|
-| GET    | `/api/categories/`     | List all categories                |
-| GET    | `/api/expenses/`       | List expenses (filterable)         |
-| POST   | `/api/expenses/`       | Create new expense                 |
-| GET    | `/api/expenses/<id>/`  | Get single expense                 |
-| PUT    | `/api/expenses/<id>/`  | Full update                        |
-| PATCH  | `/api/expenses/<id>/`  | Partial update                     |
-| DELETE | `/api/expenses/<id>/`  | Delete expense                     |
-| GET    | `/api/stats/`          | Dashboard stats + chart data       |
-
-### Query params for `GET /api/expenses/`
 ```
-?search=coffee         keyword in title or note
-?category=2            filter by category ID
-?month=2024-03         filter by YYYY-MM
+http://localhost:8001
 ```
 
-### Query params for `GET /api/stats/`
-```
-?month=2024-03         defaults to current month
-```
 
----
+## 👤 Author
 
-## 🗄️ Models
+**Sourav Majee**
 
-```python
-class Category(models.Model):
-    name  = CharField(max_length=100, unique=True)
-    color = CharField(max_length=20)   # hex color, e.g. "#f59e0b"
-    icon  = CharField(max_length=50)   # emoji, e.g. "🍔"
-
-class Expense(models.Model):
-    title      = CharField(max_length=200)
-    amount     = DecimalField(max_digits=10, decimal_places=2)
-    category   = ForeignKey(Category, on_delete=SET_NULL, null=True)
-    date       = DateField()
-    note       = TextField(blank=True)
-    created_at = DateTimeField(auto_now_add=True)
-```
-
----
-
-## 🔑 Key Django Concepts Used
-
-| Concept | Where |
-|---|---|
-| `models.Model` | `expenses/models.py` — defines DB tables |
-| `ModelSerializer` | `expenses/serializers.py` — JSON conversion |
-| `ListCreateAPIView` | `expenses/views.py` — GET list + POST |
-| `RetrieveUpdateDestroyAPIView` | `expenses/views.py` — GET/PUT/DELETE single |
-| `@api_view` | `expenses/views.py` — custom stats endpoint |
-| `migrations` | `expenses/migrations/` — versioned DB changes |
-| `admin.site.register` | `expenses/admin.py` — free admin panel |
-| `CORS` | `settings.py` — allow frontend requests |
-
----
-
-## 🚀 Next Steps to Level Up
-
-```bash
-# Add JWT authentication
-pip install djangorestframework-simplejwt
-
-# Add filtering library
-pip install django-filter
-
-# Export CSV
-# Add a view that returns HttpResponse with content_type='text/csv'
-
-# Dockerize
-# Add Dockerfile + docker-compose.yml with postgres service
-```
+GitHub
+https://github.com/sourav-majee
