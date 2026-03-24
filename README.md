@@ -3,6 +3,10 @@
 Ledger is a personal expense tracking web application built with **Django** and **vanilla JavaScript**.
 It allows users to manage daily expenses, visualize spending patterns, and export data easily.
 
+## 🚀 Live Demo
+
+https://expense-tracker-using-django-piwc.onrender.com/
+
 ---
 
 ## 🌟 Features
@@ -139,7 +143,3 @@ http://localhost:8001
 
 GitHub
 https://github.com/sourav-majee
-
-## 🚀 Live Demo
-
-https://expense-tracker-using-django-piwc.onrender.com
