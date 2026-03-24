@@ -7,6 +7,7 @@ from decouple import config
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = [BASE_DIR / "frontend/static"]
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
 DEBUG      = os.getenv("DEBUG", "True") == "True"

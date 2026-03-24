@@ -2,6 +2,12 @@
 <html lang="en">
 
 <head>
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#f5a623">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ledger">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ledger — Expense Tracker</title>
@@ -1322,7 +1328,7 @@
     }
 
     async function checkAuth() {
-      
+
       if (checkGuestMode()) {
         isGuest = true;
         showApp({ username: "Guest", email: "" });
@@ -1379,9 +1385,9 @@
       showToast("👋 Signed out successfully");
     }
 
-     /* ══════════════════════════════════════════
-       SAVE MY DATA - NEW FUNCTION
-    ══════════════════════════════════════════ */
+    /* ══════════════════════════════════════════
+      SAVE MY DATA - NEW FUNCTION
+   ══════════════════════════════════════════ */
     function saveMyData() {
       showAuth();
       showAuthTab('register');
@@ -1775,6 +1781,15 @@
         document.getElementById("theme-icon").textContent = "☀️";
         document.getElementById("theme-label").textContent = " Light Mode";
       }
+    }
+
+    // PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+          .then(() => console.log('SW registered'))
+          .catch(err => console.log('SW error:', err));
+      });
     }
 
   </script>
