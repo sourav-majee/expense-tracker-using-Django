@@ -7,7 +7,6 @@ from decouple import config
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATICFILES_DIRS = [BASE_DIR / "frontend/static"]
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
 DEBUG      = os.getenv("DEBUG", "True") == "True"
@@ -117,6 +116,7 @@ USE_I18N      = True
 USE_TZ        = True
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "frontend/static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
